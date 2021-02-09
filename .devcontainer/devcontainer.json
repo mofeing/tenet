@@ -5,12 +5,8 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"context": "..",
-		"args": { 
-			// Update 'VARIANT' to pick a Python version: 3, 3.6, 3.7, 3.8, 3.9
+		"args": {
 			"VARIANT": "3.8",
-			// Options
-			"INSTALL_NODE": "false",
-			"NODE_VERSION": "lts/*"
 		}
 	},
 
@@ -36,12 +32,6 @@
 		"ms-python.python"
 	],
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd /workspaces/tenet && export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64 && export CPATH=/usr/lib/x86_64-linux-gnu/openmpi/include && export C_INCLUDE_PATH=/usr/lib/x86_64-linux-gnu/openmpi/include && poetry install",
-
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode"
+	"postCreateCommand": "./scripts/docker-setup.sh",
 }
