@@ -1,0 +1,74 @@
+from typing import Union, Tuple
+import networkx as nx
+from uuid import uuid4
+from .operator import Operator
+from functools import singledispatchmethod
+
+
+class Circuit:
+    """
+    A graph representing a quantum circuit.
+    """
+
+    def __init__(self, n: int):
+        assert n > 0
+        self.__n = n
+        aux = [(uuid4(), {'target': i, 'operator': 'in'})
+               for i in range(n)]
+        self.__tail = [i[0] for i in aux]
+        self.__head = self.__tail
+        self.__graph = nx.DiGraph(aux)
+
+    @property
+    def graph(self) -> nx.DiGraph:
+        return self.__graph
+
+    def len(self) -> int:
+        return self.__n
+
+    @property
+    def n(self) -> int:
+        return self.__n
+
+    @singledispatchmethod
+    def add_gate(self, target, op):
+        raise NotImplementedError
+
+    @add_gate.register
+    def _(self, target: int, op: Operator):
+        assert op.mat().shape == (2, 2)
+        assert 0 <= target < self.n
+
+        uuid_from = self.__head[target]
+        uuid_to = uuid4()
+        self.__graph.add_node(uuid_to, {'target': target, 'operator': op})
+        self.__graph.add_edge((uuid_from, uuid_to))
+        self.__head[target] = uuid_to
+
+    @add_gate.register
+    def _(self, target: Tuple[int, int], op: Operator):
+        assert op.mat().shape == (4, 4)
+        assert 0 <= target[0] < self.n
+        assert 0 <= target[1] < self.n
+
+        a = self.__head[target[0]]
+        b = self.__head[target[1]]
+
+        uuid_to = uuid4()
+        self.__graph.add_node(uuid_to, {'target': target, 'operator': op})
+        self.__graph.add_edge((a, uuid_to))
+        self.__graph.add_edge((b, uuid_to))
+
+        self.__head[target[0]] = uuid_to
+        self.__head[target[1]] = uuid_to
+
+    def depth(self) -> int:
+        return nx.algorithms.dag.dag_longest_path_length(self.__graph)
+
+    def __iter__(self):
+        self.__it = nx.topological_sort(self.__graph)
+        return self
+
+    def __next__(self):
+        it = next(self.__it)
+        return (it['target'], it['operator'])
