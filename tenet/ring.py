@@ -16,10 +16,7 @@ class Ring(Network):
     def distance(self, a: int, b: int) -> int:
         return min(abs(a-b), self.n - abs(a-b))
 
-    def swap_path(self, a: int, b: int):
-        """
-        TODO
-        """
+    def path(self, a: int, b: int):
         assert self.distance(a, b) > 1
 
         n = self.len()
@@ -30,4 +27,6 @@ class Ring(Network):
         while head != b:
             head = (head + 1 if clockwise else head - 1) % n
             order.append(head)
+
+        order.append(b)
         return order

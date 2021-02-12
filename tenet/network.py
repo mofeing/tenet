@@ -2,11 +2,11 @@ from abc import abstractmethod
 from .circuit import Circuit
 from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN, OUT
-from .operator import Operator, S
+from .operator import Operator, S, Swap
 import numpy as np
 from numpy.linalg import svd
 from functools import singledispatchmethod
-from typing import Tuple
+from typing import Tuple, List
 
 
 class Network:
@@ -33,9 +33,11 @@ class Network:
         raise NotImplementedError
 
     @abstractmethod
-    def swap_path(self, a: int, b: int):
+    def path(self, a: int, b: int) -> List[int]:
         """
-        Computes the shortest ordering of SWAP operations such applying will make `a` and `b` qubits neighbours topologically.
+        Computes the shortest path between qubits `a` and `b`.
+        """
+        raise NotImplementedError
 
         `b` is the qubit target of the SWAPs.
         """
