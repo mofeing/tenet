@@ -30,3 +30,10 @@ class Ring(Network):
 
         order.append(b)
         return order
+
+    def common_idx(self, a: int, b: int) -> Tuple[int, int]:
+        if self.distance(a, b) > 1:
+            raise RuntimeError("a and b are not contiguous")
+
+        # if true, b increases clockwisely over a
+        return (2, 1) if self.distance((a+1) % self.n, b) == 0 else (1, 2)

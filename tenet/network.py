@@ -39,7 +39,10 @@ class Network:
         """
         raise NotImplementedError
 
-        `b` is the qubit target of the SWAPs.
+    @abstractmethod
+    def common_idx(self, a: int, b: int) -> Tuple[int, int]:
+        """
+        Returns the common edge between `a` and `b` in index number.
         """
         raise NotImplementedError
 
