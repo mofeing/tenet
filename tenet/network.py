@@ -76,8 +76,25 @@ class Network:
         assert 0 <= a < self.n
         assert 0 <= b < self.n
 
-        # TODO permute op?
-        __apply_op2(self._tensor[a], , self._tensor[b], , op)
+        swaps = []
+        if self.distance(a, b) > 1:
+            swaps = self.path(a, b)
+
+        # Swap qubits 'till a and b are contiguous
+        for c in swaps:
+            (idx_a, idx_c) = self.common_idx(a, c)
+            __apply_op2(self._tensor[a], idx_a, self._tensor[c], idx_c, Swap())
+            a = c
+
+        # Call kernel
+        (idx_a, idx_b) = self.common_idx(a, b)
+        __apply_op2(self._tensor[a], idx_a, self._tensor[b], idx_b, op)
+
+        # Reverse back Swaps
+        for c in reversed(swaps):
+            (idx_a, idx_c) = self.common_idx(a, c)
+            __apply_op2(self._tensor[a], idx_a, self._tensor[b], idx_b, Swap())
+            a = c
 
     def run(self, circuit: Circuit):
         """
