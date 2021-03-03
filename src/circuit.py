@@ -4,7 +4,7 @@ from uuid import uuid4
 from gate import Gate, I
 
 
-class Circuit:
+class Circuit(object):
     """
     A graph representing a quantum circuit.
     """
