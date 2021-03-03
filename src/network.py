@@ -11,7 +11,7 @@ from task import apply_op1, apply_op2
 class Network(object):
     def __init__(self, n: int):
         assert n > 0
-        self._n = 0
+        self._n = n
         self._tensor = []
 
     def len(self) -> int:
