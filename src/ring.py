@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Tuple
-from .network import Network, __init_qubit_zero
+from task import init_qubit_zero
 
 
 class Ring(Network):
@@ -11,7 +11,8 @@ class Ring(Network):
     def __init__(self, n: int, chi: int):
         assert chi > 2
         Network.__init__(self, n)
-        self._tensors = [__init_qubit_zero((2, chi, chi)) for _ in range(n)]
+        self._tensor = [init_qubit_zero(
+            (2, chi, chi)) for _ in range(n)]
 
     def distance(self, a: int, b: int) -> int:
         return min(abs(a-b), self.n - abs(a-b))

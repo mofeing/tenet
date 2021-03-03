@@ -7,6 +7,7 @@ import numpy as np
 from numpy.linalg import svd
 from functools import singledispatchmethod
 from typing import Tuple, List
+from task import apply_op1, apply_op2
 
 
 class Network:
@@ -63,8 +64,7 @@ class Network:
         Apply a single-qubit operator.
         """
         assert 0 <= target < self.n
-
-        __apply_op1(self._tensor[target], op)
+        apply_op1(self._tensor[target], op.mat())
 
     @apply.register
     def _(self, target: Tuple[int, int], op: Operator):
@@ -83,17 +83,20 @@ class Network:
         # Swap qubits 'till a and b are contiguous
         for c in swaps:
             (idx_a, idx_c) = self.common_idx(a, c)
-            __apply_op2(self._tensor[a], idx_a, self._tensor[c], idx_c, Swap())
+            apply_op2(
+                self._tensor[a], idx_a, self._tensor[c], idx_c, Swap().mat())
             a = c
 
         # Call kernel
         (idx_a, idx_b) = self.common_idx(a, b)
-        __apply_op2(self._tensor[a], idx_a, self._tensor[b], idx_b, op)
+        apply_op2(
+            self._tensor[a], idx_a, self._tensor[b], idx_b, op.mat())
 
         # Reverse back Swaps
         for c in reversed(swaps):
             (idx_a, idx_c) = self.common_idx(a, c)
-            __apply_op2(self._tensor[a], idx_a, self._tensor[b], idx_b, Swap())
+            apply_op2(
+                self._tensor[a], idx_a, self._tensor[b], idx_b, Swap().mat())
             a = c
 
     def run(self, circuit: Circuit):
@@ -104,33 +107,3 @@ class Network:
 
         for (target, op) in circuit:
             self.apply(target, op)
-
-
-@task(shape=IN, returns=np.ndarray)
-def __init_qubit_zero(shape) -> np.ndarray:
-    arr = np.zeros(shape, dtype=np.csingle)
-    arr[0, :] = 1
-    return arr
-
-
-@task(psi=INOUT, op=IN)
-def __apply_op1(psi: np.ndarray, op: np.ndarray):
-    orig_shape = psi.shape
-    psi.reshape((2, -1))
-    psi = op * psi
-    psi.reshape(orig_shape)
-
-
-@task(a=INOUT, b=INOUT, op=IN)
-def __apply_op2(a: np.ndarray, idx_a: int, b: np.ndarray, idx_b: int, op: np.ndarray):
-    # TODO contract tensors
-    c = np.einsum()
-
-    # TODO contract operator
-    c = np.einsum()
-
-    # TODO svd
-    (u, s, v) = svd(c, compute_uv=True)
-
-    a = u * s
-    b = v
