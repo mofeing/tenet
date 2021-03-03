@@ -22,7 +22,7 @@ class I(Operator):
         return "I"
 
     def mat(self) -> ndarray:
-        return array([1, 0], [0, 1], dtype=csingle)
+        return array([[1, 0], [0, 1]], dtype=csingle)
 
 
 class X(Operator):
