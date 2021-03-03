@@ -1,7 +1,7 @@
 from typing import Union, Tuple
 import networkx as nx
 from uuid import uuid4
-from .operator import Operator
+from gate import Gate, I
 
 
 class Circuit:
@@ -37,7 +37,7 @@ class Circuit:
         else:
             raise NotImplementedError
 
-    def __add_gate_int(self, target: int, op: Operator):
+    def __add_gate_int(self, target: int, op: Gate):
         assert op.mat().shape == (2, 2)
         assert 0 <= target < self.n
 
@@ -47,7 +47,7 @@ class Circuit:
         self.__graph.add_edge((uuid_from, uuid_to))
         self.__head[target] = uuid_to
 
-    def __add_gate_tuple(self, target: Tuple[int, int], op: Operator):
+    def __add_gate_tuple(self, target: Tuple[int, int], op: Gate):
         assert op.mat().shape == (4, 4)
         assert 0 <= target[0] < self.n
         assert 0 <= target[1] < self.n

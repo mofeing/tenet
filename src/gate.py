@@ -4,7 +4,7 @@ from math import cos, sin, pi, sqrt
 from cmath import rect
 
 
-class Operator:
+class Gate:
     @abstractclassmethod
     def name(self) -> str:
         raise NotImplementedError
@@ -12,12 +12,12 @@ class Operator:
     @abstractclassmethod
     def mat(self) -> ndarray:
         """
-        Returns the matrix representation of the operator.
+        Returns the matrix representation of the Gate.
         """
         raise NotImplementedError
 
 
-class I(Operator):
+class I(Gate):
     def name(self) -> str:
         return "I"
 
@@ -25,63 +25,63 @@ class I(Operator):
         return array([[1, 0], [0, 1]], dtype=csingle)
 
 
-class X(Operator):
+class X(Gate):
     def name(self) -> str:
         return "X"
 
     def mat(self) -> ndarray:
-        return array([[0, 1], [1, 0]], dtype=csingle)
+        return array([[0, 1], [1, 0]], csingle)
 
 
-class Y(Operator):
+class Y(Gate):
     def name(self) -> str:
         return "Y"
 
     def mat(self) -> ndarray:
-        return array([[0, -1j], [1j, 0]], dtype=csingle)
+        return array([[0, -1j], [1j, 0]], csingle)
 
 
-class Z(Operator):
+class Z(Gate):
     def name(self) -> str:
         return "Z"
 
     def mat(self) -> ndarray:
-        return array([[1, 0], [0, -1]], dtype=csingle)
+        return array([[1, 0], [0, -1]], csingle)
 
 
-class S(Operator):
+class S(Gate):
     def name(self) -> str:
         return "S"
 
     def mat(self) -> ndarray:
-        return array([[1, 0], [0, 1j]], dtype=csingle)
+        return array([[1, 0], [0, 1j]], csingle)
 
 
-class Sd(Operator):
+class Sd(Gate):
     def name(self) -> str:
         return "S dagger"
 
     def mat(self) -> ndarray:
-        return array([[1, 0], [0, -1j]], dtype=csingle)
+        return array([[1, 0], [0, -1j]], csingle)
 
 
-class T(Operator):
+class T(Gate):
     def name(self) -> str:
         return "T"
 
     def mat(self) -> ndarray:
-        return array([[1, 0], [0, rect(1, pi/4)]], dtype=csingle)
+        return array([[1, 0], [0, rect(1, pi/4)]], csingle)
 
 
-class Td(Operator):
+class Td(Gate):
     def name(self) -> str:
         return "T dagger"
 
     def mat(self) -> ndarray:
-        return array([1, 0], [0, rect(1, -pi/4)], dtype=csingle)
+        return array([1, 0], [0, rect(1, -pi/4)], csingle)
 
 
-class Rx(Operator):
+class Rx(Gate):
     def name(self) -> str:
         return "Rx"
 
@@ -92,10 +92,10 @@ class Rx(Operator):
         return array([
             [cos(self.theta/2), -1j * sin(self.theta/2)],
             [-1j * sin(self.theta/2), cos(self.theta/2)]
-        ], dtype=csingle)
+        ], csingle)
 
 
-class Ry(Operator):
+class Ry(Gate):
     def name(self) -> str:
         return "Ry"
 
@@ -106,10 +106,10 @@ class Ry(Operator):
         return array([
             [cos(self.theta/2), -sin(self.theta/2)],
             [sin(self.theta/2), cos(self.theta/2)]
-        ], dtype=csingle)
+        ], csingle)
 
 
-class Rz(Operator):
+class Rz(Gate):
     def name(self) -> str:
         return "Rz"
 
@@ -120,10 +120,10 @@ class Rz(Operator):
         return array([
             [rect(1, - self.theta/2), 0],
             [0, rect(1, self.theta/2)]
-        ], dtype=csingle)
+        ], csingle)
 
 
-class H(Operator):
+class H(Gate):
     def name(self) -> str:
         return "H"
 
@@ -131,7 +131,7 @@ class H(Operator):
         return 1/sqrt(2) * array([[1, 1], [1, -1]])
 
 
-class U3(Operator):
+class U3(Gate):
     def name(self) -> str:
         return "U3"
 
@@ -150,14 +150,14 @@ class U3(Operator):
                 rect(1, self.phi) * sin(self.theta/2),
                 rect(1, self.lambd + self.phi) * cos(self.theta/2)
             ]
-        ], dtype=csingle)
+        ], csingle)
 
 
-class Controlled(Operator):
+class Controlled(Gate):
     def name(self) -> str:
         return "C-"  # TODO
 
-    def __init__(self, op: Operator):
+    def __init__(self, op: Gate):
         assert op.size == (2, 2)
         self.op = op
 
@@ -167,10 +167,10 @@ class Controlled(Operator):
             [0, 1, 0, 0],
             [0, 0, self.op[1, 1], self.op[1, 2]],
             [0, 0, self.op[2, 1], self.op[2, 2]]
-        ], dtype=csingle)
+        ], csingle)
 
 
-def CX(Operator):
+def CX(Gate):
     def name(self) -> str:
         return "CX"
 
@@ -178,7 +178,7 @@ def CX(Operator):
         return Controlled(X())
 
 
-def CY(Operator):
+def CY(Gate):
     def name(self) -> str:
         return "CY"
 
@@ -186,7 +186,7 @@ def CY(Operator):
         return Controlled(Y())
 
 
-def CZ(Operator):
+def CZ(Gate):
     def name(self) -> str:
         return "CZ"
 
@@ -194,7 +194,7 @@ def CZ(Operator):
         return Controlled(Z())
 
 
-class Swap(Operator):
+class Swap(Gate):
     def name(self) -> str:
         return "SWAP"
 
@@ -204,4 +204,4 @@ class Swap(Operator):
             [0, 0, 1, 0],
             [0, 1, 0, 0],
             [0, 0, 0, 1]
-        ], dtype=csingle)
+        ], csingle)

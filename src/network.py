@@ -1,8 +1,6 @@
 from abc import abstractmethod
 from .circuit import Circuit
-from pycompss.api.task import task
-from pycompss.api.parameter import INOUT, IN, OUT
-from .operator import Operator, S, Swap
+from gate import Gate, S, Swap
 import numpy as np
 from numpy.linalg import svd
 from typing import Tuple, List
@@ -61,14 +59,14 @@ class Network:
         else:
             raise NotImplementedError
 
-    def __apply_int(self, target: int, op: Operator):
+    def __apply_int(self, target: int, op: Gate):
         """
         Apply a single-qubit operator.
         """
         assert 0 <= target < self.n
         apply_op1(self._tensor[target], op.mat())
 
-    def __apply_tuple(self, target: Tuple[int, int], op: Operator):
+    def __apply_tuple(self, target: Tuple[int, int], op: Gate):
         """
         Apply a double-qubit operator.
         """
