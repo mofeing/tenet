@@ -7,6 +7,11 @@ from task import init_qubit_zero
 class Ring(Network):
     """
     A Matrix Product State where the first and last qubits are connected forming a ring.
+
+    Tensors indexes are organized the following way:
+    1. Physical bond
+    2. Counterclockwise virtual bond
+    3. Clockwise virtual bond
     """
 
     def __init__(self, n: int, chi: int):
