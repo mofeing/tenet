@@ -2,7 +2,6 @@ from typing import Union, Tuple
 import networkx as nx
 from uuid import uuid4
 from .operator import Operator
-from functools import singledispatchmethod
 
 
 class Circuit:
@@ -30,12 +29,15 @@ class Circuit:
     def n(self) -> int:
         return self.__n
 
-    @singledispatchmethod
     def add_gate(self, target, op):
-        raise NotImplementedError
+        if isinstance(target, int):
+            self.__add_gate_int(target, op)
+        elif isinstance(target, Tuple[int, int]):
+            self.__add_gate_tuple(target, op)
+        else:
+            raise NotImplementedError
 
-    @add_gate.register
-    def _(self, target: int, op: Operator):
+    def __add_gate_int(self, target: int, op: Operator):
         assert op.mat().shape == (2, 2)
         assert 0 <= target < self.n
 
@@ -45,8 +47,7 @@ class Circuit:
         self.__graph.add_edge((uuid_from, uuid_to))
         self.__head[target] = uuid_to
 
-    @add_gate.register
-    def _(self, target: Tuple[int, int], op: Operator):
+    def __add_gate_tuple(self, target: Tuple[int, int], op: Operator):
         assert op.mat().shape == (4, 4)
         assert 0 <= target[0] < self.n
         assert 0 <= target[1] < self.n

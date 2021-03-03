@@ -5,7 +5,6 @@ from pycompss.api.parameter import INOUT, IN, OUT
 from .operator import Operator, S, Swap
 import numpy as np
 from numpy.linalg import svd
-from functools import singledispatchmethod
 from typing import Tuple, List
 from task import apply_op1, apply_op2
 
@@ -54,20 +53,22 @@ class Network:
         """
         raise NotImplementedError
 
-    @singledispatchmethod
     def apply(self, target, op):
-        raise NotImplementedError
+        if isinstance(target, int):
+            self.__apply_int(target, op)
+        elif isinstance(target, Tuple[int, int]):
+            self.__apply_tuple(target, op)
+        else:
+            raise NotImplementedError
 
-    @apply.register
-    def _(self, target: int, op: Operator):
+    def __apply_int(self, target: int, op: Operator):
         """
         Apply a single-qubit operator.
         """
         assert 0 <= target < self.n
         apply_op1(self._tensor[target], op.mat())
 
-    @apply.register
-    def _(self, target: Tuple[int, int], op: Operator):
+    def __apply_tuple(self, target: Tuple[int, int], op: Operator):
         """
         Apply a double-qubit operator.
         """
