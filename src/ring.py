@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Tuple
+from network import Network
 from task import init_qubit_zero
 
 
