@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from .circuit import Circuit
+from circuit import Circuit
 from gate import Gate, S, Swap
 import numpy as np
 from numpy.linalg import svd
