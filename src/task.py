@@ -26,4 +26,16 @@ def apply_op1(psi, op):
 
 @task(a=INOUT, b=INOUT, op=IN)
 def apply_op2(a: np.ndarray, idx_a: int, b: np.ndarray, idx_b: int, op: np.ndarray):
-    pass
+    # Contract tensors
+    op = op.reshape((2, 2, 2, 2))
+    c = np.tensordot(a, b, axes=(idx_a, idx_b))
+    c = np.tensordot(c, op, axes=[(1, 2), (0, 1)])
+
+    # SVD
+    c = c.transpose(0, 2, 1, 3)
+    chi = c.shape[0]
+    c = c.reshape(chi*2, -1)
+    (u, s, v) = np.linalg.svd(c, compute_uv=True)
+
+    b = v
+    a = u * s
