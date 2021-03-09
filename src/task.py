@@ -1,5 +1,6 @@
 from pycompss.api.task import task
 from pycompss.api.parameter import INOUT, IN, OUT
+import numpy as np
 
 
 @task(shape=IN, returns=np.ndarray)
