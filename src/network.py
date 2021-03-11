@@ -54,7 +54,7 @@ class Network(object):
     def apply(self, target, op):
         if isinstance(target, int):
             self.__apply_int(target, op)
-        elif isinstance(target, Tuple[int, int]):
+        elif isinstance(target, Tuple):
             self.__apply_tuple(target, op)
         else:
             raise NotImplementedError

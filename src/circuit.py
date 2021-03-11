@@ -35,7 +35,7 @@ class Circuit(object):
     def add_gate(self, target, op):
         if isinstance(target, int):
             self.__add_gate_int(target, op)
-        elif isinstance(target, Tuple[int, int]):
+        elif isinstance(target, Tuple):
             self.__add_gate_tuple(target, op)
         else:
             raise NotImplementedError
