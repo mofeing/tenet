@@ -157,8 +157,8 @@ class Controlled(Gate):
     def name(self) -> str:
         return "C-"  # TODO
 
-    def __init__(self, op: Gate):
-        assert op.size == (2, 2)
+    def __init__(self, op: Gate, name=None):
+        assert op.mat().shape == (2, 2)
         self.op = op
 
     def mat(self) -> ndarray:
@@ -170,28 +170,46 @@ class Controlled(Gate):
         ], csingle)
 
 
-def CX(Gate):
+class CX(Gate):
     def name(self) -> str:
         return "CX"
 
-    def __init__(self):
-        return Controlled(X())
+    def mat(self):
+        op = X().mat()
+        return array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, op[1, 1], op[1, 2]],
+            [0, 0, op[2, 1], op[2, 2]]
+        ], csingle)
 
 
-def CY(Gate):
+class CY(Gate):
     def name(self) -> str:
         return "CY"
 
-    def __init__(self):
-        return Controlled(Y())
+    def mat(self):
+        op = Y().mat()
+        return array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, op[1, 1], op[1, 2]],
+            [0, 0, op[2, 1], op[2, 2]]
+        ], csingle)
 
 
-def CZ(Gate):
+class CZ(Gate):
     def name(self) -> str:
         return "CZ"
 
-    def __init__(self):
-        return Controlled(Z())
+    def mat(self):
+        op = Z().mat()
+        return array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, op[1, 1], op[1, 2]],
+            [0, 0, op[2, 1], op[2, 2]]
+        ], csingle)
 
 
 class Swap(Gate):
