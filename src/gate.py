@@ -165,8 +165,8 @@ class Controlled(Gate):
         return array([
             [1, 0, 0, 0],
             [0, 1, 0, 0],
-            [0, 0, self.op[1, 1], self.op[1, 2]],
-            [0, 0, self.op[2, 1], self.op[2, 2]]
+            [0, 0, self.op[0, 0], self.op[0, 1]],
+            [0, 0, self.op[1, 0], self.op[1, 1]]
         ], csingle)
 
 
@@ -179,8 +179,8 @@ class CX(Gate):
         return array([
             [1, 0, 0, 0],
             [0, 1, 0, 0],
-            [0, 0, op[1, 1], op[1, 2]],
-            [0, 0, op[2, 1], op[2, 2]]
+            [0, 0, op[0, 0], op[0, 1]],
+            [0, 0, op[1, 0], op[1, 1]]
         ], csingle)
 
 
@@ -193,8 +193,8 @@ class CY(Gate):
         return array([
             [1, 0, 0, 0],
             [0, 1, 0, 0],
-            [0, 0, op[1, 1], op[1, 2]],
-            [0, 0, op[2, 1], op[2, 2]]
+            [0, 0, op[0, 0], op[0, 1]],
+            [0, 0, op[1, 0], op[1, 1]]
         ], csingle)
 
 
@@ -207,8 +207,8 @@ class CZ(Gate):
         return array([
             [1, 0, 0, 0],
             [0, 1, 0, 0],
-            [0, 0, op[1, 1], op[1, 2]],
-            [0, 0, op[2, 1], op[2, 2]]
+            [0, 0, op[0, 0], op[0, 1]],
+            [0, 0, op[1, 0], op[1, 1]]
         ], csingle)
 
 
