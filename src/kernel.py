@@ -30,7 +30,7 @@ def apply_op2(a: np.ndarray, idx_a: int, b: np.ndarray, idx_b: int, op: np.ndarr
     # Contract tensors
     op = op.reshape((2, 2, 2, 2))
     c = np.tensordot(a, b, axes=(idx_a, idx_b))
-    c = np.tensordot(c, op, axes=[(1, 2), (0, 1)])
+    c = np.tensordot(c, op, axes=[(0, 2), (0, 1)])
 
     # SVD
     c = c.transpose(0, 2, 1, 3)
