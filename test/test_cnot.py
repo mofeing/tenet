@@ -13,7 +13,7 @@ def main():
     for i in range(n):
         circ.add_gate(i, gate.H())
 
-    for i in range(n/2):
+    for i in range(int(n/2)):
         circ.add_gate((2*i, 2*i+1), gate.CX())
 
     for i in range(n):
