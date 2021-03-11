@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple, List
 from network import Network
-from task import init_qubit_zero
+from kernel import init_qubit_zero
 from math import floor, log
 
 

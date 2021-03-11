@@ -4,8 +4,7 @@ from gate import Gate, S, Swap
 import numpy as np
 from numpy.linalg import svd
 from typing import Tuple, List
-from task import apply_op1, apply_op2
-
+from kernel import apply_op1, apply_op2
 
 
 class Network(object):
