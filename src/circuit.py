@@ -1,7 +1,7 @@
 from typing import Union, Tuple
 import networkx as nx
 from uuid import uuid4
-from gate import Gate, I
+from gate import Gate
 
 
 class Circuit(object):
@@ -12,14 +12,9 @@ class Circuit(object):
     def __init__(self, n: int):
         assert n > 0
         self.__n = n
-        aux = [{'id': uuid4(), 'target': i, 'operator': I()}
-               for i in range(n)]
-        self.__tail = [i['id'] for i in aux]
+        self.__tail = [None]*n
         self.__head = self.__tail
         self.__graph = nx.DiGraph()
-        for obj in aux:
-            self.__graph.add_node(obj['id'], attr_dict={
-                                  'target': obj['target'], 'operator': obj['operator']})
 
     @property
     def graph(self) -> nx.DiGraph:
@@ -48,7 +43,11 @@ class Circuit(object):
         uuid_to = uuid4()
         self.__graph.add_node(uuid_to, attr_dict={
                               'target': target, 'operator': op})
-        self.__graph.add_edge(uuid_from, uuid_to)
+
+        if uuid_from != None:
+            self.__graph.add_edge(uuid_from, uuid_to)
+        else:
+            self.__tail[target] = uuid_to
         self.__head[target] = uuid_to
 
     def __add_gate_tuple(self, target: Tuple[int, int], op: Gate):
@@ -62,8 +61,16 @@ class Circuit(object):
         uuid_to = uuid4()
         self.__graph.add_node(uuid_to, attr_dict={
                               'target': target, 'operator': op})
-        self.__graph.add_edge(a, uuid_to)
-        self.__graph.add_edge(b, uuid_to)
+
+        if a != None:
+            self.__graph.add_edge(a, uuid_to)
+        else:
+            self.__tail[target[0]] = uuid_to
+
+        if b != None:
+            self.__graph.add_edge(b, uuid_to)
+        else:
+            self.__tail[target[1]] = uuid_to
 
         self.__head[target[0]] = uuid_to
         self.__head[target[1]] = uuid_to
