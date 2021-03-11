@@ -86,3 +86,11 @@ class Circuit(object):
         node = next(self.__it)
         attr = self.__graph.nodes[node]['attr_dict']
         return (attr['target'], attr['operator'])
+
+    def join(self, other):
+        """
+        Merge `other` circuit.
+        """
+        assert self.n == other.n
+        for (target, op) in other:
+            self.add_gate(target, op)
